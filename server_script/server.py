@@ -17,7 +17,7 @@ class maintain():
         self._history = {}
         self._users = ["1111","kaedon","bagelforever","password","brick","byui"]
         self._url = "To download this server code, download Git and run 'git clone 'https://github.com/ocramoa/simpleserver'"
-        self._operations = "\nOperations: \n To delete history after a certain point, enter 1 after your password followed by an integer. \n To receive server access history, enter 2 after your password. \n To delete all history, enter 3 after your password."
+        self._operations = "\nOperations: \n To delete history at a certain point, enter 1 after your password followed by an integer. \n To receive server access history, enter 2 after your password. \n To delete all history, enter 3 after your password."
 
     def update_history(self, client, password_and_time):
         """Updates the server history."""
