@@ -8,27 +8,28 @@ class maintain():
     
     Attributes:
         _history -> Data about the current client's connection to be stored in history.txt.
-        _passwords -> Essentially just a list of valid usernames the client can use.
+        _users -> Essentially just a list of valid usernames the client can use.
         _url -> Instructions on how to get the server code.
         _operations -> Instructions on how to interact with the server.
     """
 
     def __init__(self):
         self._history = {}
-        self._passwords = ["1111","kaedon","bagelforever","password","brick"]
-        self._url = "To download this server code, run 'git clone 'https://github.com/ocramoa/simpleserver'"
+        self._users = ["1111","kaedon","bagelforever","password","brick","byui"]
+        self._url = "To download this server code, download Git and run 'git clone 'https://github.com/ocramoa/simpleserver'"
         self._operations = "\nOperations: \n To delete history after a certain point, enter 1 after your password followed by an integer. \n To receive server access history, enter 2 after your password. \n To delete all history, enter 3 after your password."
 
     def update_history(self, client, password_and_time):
         """Updates the server history."""
         self._history.update({client:password_and_time})
+        # After updating the _history attribute, opens the file and appends it.
         with open(r"C:\Users\eyeba\web_server\server_script\history.txt", "a") as h:
             h.write(f"{self._history}\n")
 
     def get_history(self):
         """Gets the server access history."""
         with open(r"C:\Users\eyeba\web_server\server_script\history.txt", "r") as h:
-
+            # Simply reads and returns the contents of the entire file. In a larger project, this would be unwise.
             record = h.read()
         
         return record
@@ -54,6 +55,7 @@ class maintain():
     def delete_all(self, user):
         """Deletes all server access history and replaces it with a deleted notice."""
         with open(r"C:\Users\eyeba\web_server\server_script\history.txt", "w+") as h:
+            # Because we open the file in write+ mode, it deletes everything there and writes who deleted it and when.
             h.write(f"delete_all by {user} at {datetime.datetime.now()}\n")
 
 class conductor(socketserver.BaseRequestHandler):
@@ -63,22 +65,27 @@ class conductor(socketserver.BaseRequestHandler):
     It is instantiated once per connection to the server, and must
     override the handle() method to implement communication to the
     client.
+
+    The above is in the default documentation for the base request handler.
     """
 
     def handle(self):
-        # self.request is the TCP socket connected to the client
+        # Instantiate the maintain class.
         maintainer = maintain()
+        # self.request is the TCP socket connected to the client. 
         self.data = self.request.recv(2048).strip()
+        # Decode bytelike data to utf-8.
         decoded = self.data.decode("utf-8")
+        # Split whitespace to store the user and their operations into a list.
         user_args = decoded.split()
         print(f"{self.client_address[0]} wrote:")
         print(user_args)
         print(f"at {datetime.datetime.now()}")
+        #After printing to terminal, update the history.txt file with request data.
         maintainer.update_history(self.client_address[0],(user_args[0] + " " + str(datetime.datetime.now())))
         print(maintainer._history)
-        if user_args[0] in maintainer._passwords:
-        # Send back the url for the server code.
-            # self.request.sendall(bytes(f"{maintainer._url}\n{maintainer._operations}", "utf-8"))
+        # If the user is valid, accept their argument if it exists and perform the associated action.
+        if user_args[0] in maintainer._users:
             print()
             response = ""
             if len(user_args) > 1:
@@ -97,6 +104,7 @@ class conductor(socketserver.BaseRequestHandler):
                     response = "Either no operation or operation is invalid."
             else:
                 pass
+            # Send back a response. First is the GitHub url, next the available operations, and finally the result of the operation the user entered. Use sendall instead of send so nothing gets lost.
             self.request.sendall(bytes(f"{maintainer._url}\n{maintainer._operations}\n{response}", "utf-8"))               
         # There was some kind of error (authentication, maybe?)
         else:

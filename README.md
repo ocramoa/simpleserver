@@ -1,10 +1,10 @@
 # Overview
 
-{Important!  Do not say in this section that this is college assignment.  Talk about what you are trying to accomplish as a software engineer to further your learning.}
+This is a project for simple server and client scripts.
 
-{Provide a description the networking program that you wrote. Describe how to use your software.  If you did Client/Server, then you will need to describe how to start both.}
+When run (via entering "python3 server_script/server.py" into the terminal), the server will run forever until it is manually stopped via Ctrl+C. It listens continuously for a request from the client (start by entering python3 client_script/client.py) in the form of a username and one or more numbers.  Upon receiving a request, the server immediately logs the client's request in the history.txt file and prints it to the server terminal. The server always sends back a link to the GitHub repo and a list of operations it can perform, and can also send a response based on what the user decides to do with the history.txt file.
 
-{Describe your purpose for writing this software.}
+I've always been curious about how networking actually works, so I wrote this software as an experiment and as a way of gaining "hands-on" experience.
 
 {Provide a link to your YouTube demonstration.  It should be a 4-5 minute demo of the software running (you will need to show two pieces of software running and communicating with each other) and a walkthrough of the code.}
 
@@ -12,27 +12,28 @@
 
 # Network Communication
 
-{Describe the architecture that you used (client/server or peer-to-peer)}
+I used client-server architecture. The server receives requests from clients, services them, and sends back data. However, this simple server can only service one request at a time.
 
-{Identify if you are using TCP or UDP and what port numbers are used.}
+This is a TCP server as UDP is not necessary for something this small and slow. I used port 5007, but any other random unused port will do.
 
-{Identify the format of messages being sent between the client and server or the messages sent between two peers.}
+Both the client and server communicate with byte-like messages. They convert a string message to byte-like before sending data and do the reverse after receiving data. The client should always use this format -- "user N" or "user 1 N" with "user" being a username and N being a number corresponding to an operation or a file line. You will easily break the program if you type something different.
 
 # Development Environment
 
-{Describe the tools that you used to develop the software}
+I developed this program with Visual Studio Code and the command line on a Windows PC and a Chromebook running Linux.
 
-{Describe the programming language that you used and any libraries.}
+For the code itself, I used Python 3.11 and the socket, socketserver and datetime libraries.
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
-* [Web Site Name](http://url.link.goes.here)
-* [Web Site Name](http://url.link.goes.here)
+* [Python 3 socket](https://docs.python.org/3.11/library/socket.html)
+* [Python 3 socketserver](https://docs.python.org/3/library/socketserver.html)
+* [StackOverflow: Difference between modes a, a+, w, w+, and r+ in built-in open function? by flybywire](https://stackoverflow.com/questions/1466000/difference-between-modes-a-a-w-w-and-r-in-built-in-open-function)
+* [Delete Lines from a File in Python](https://pynative.com/python-delete-lines-from-file/)
 
 # Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-* Item 1
-* Item 2
-* Item 3
+* This is a simple server, so it shouldn't get too complicated. However, one could use the threading module to enable the server to service multiple clients at once.
+* A GUI could make this more accessible and interesting.
+* I actually could not figure out how to get the server to sendall multiple times when variables in f-strings were involved. Although I like the way it looks now, if I wanted to spend more time on this I'd dig deeper and find out why.
+* It would be nice if the client could do more with the server. Perhaps the server could generate and store a unique username for the client to use in operations.
